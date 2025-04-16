@@ -5,51 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         .fade {
             transition: opacity 0.5s ease;
         }
         .spinner {
-            border: 4px solid #000; /* Black border */
-            border-top: 4px solid transparent; /* Transparent top */
+            border: 4px solid #000;
+            border-top: 4px solid transparent;
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite; /* Spinning animation */
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            animation: spin 1s linear infinite;
         }
     </style>
     <script>
         window.onload = function() {
             setTimeout(function() {
                 const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade'); // Remove fade class to allow for opacity change
-                loadingScreen.style.opacity = '0'; // Start fade-out
+                loading loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
                 setTimeout(function() {
-                    loadingScreen.classList.add('hidden'); // Hide after fade-out
-                    document.getElementById('main-content').classList.remove('hidden'); // Show main content
-                }, 500); // Match this duration with the CSS transition duration
+                    loadingScreen.classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                }, 500);
             }, 1000);
         };
 
         function handleLogin(event) {
-            event.preventDefault(); // Prevent the default form submission
-            const usernameInput = document.getElementById('username').value;
-            const passwordInput = document.getElementById('password').value;
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-            // Retrieve the stored username and password from localStorage
+            // Retrieve user data from localStorage
             const storedUsername = localStorage.getItem('username');
             const storedPassword = localStorage.getItem('password');
 
-            // Check if the input matches the stored values
-            if (usernameInput === storedUsername && passwordInput === storedPassword) {
+            if (username === storedUsername && password === storedPassword) {
                 alert('Login successful!');
                 // Redirect to a welcome page or dashboard
-                // For example: window.location.href = 'welcome.html';
             } else {
                 alert('Invalid username or password. Please try again.');
             }
@@ -61,8 +54,7 @@
         <div class="spinner"></div>
     </div>
     <div id="main-content" class="text-center hidden">
-        <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
-        <h2 class="text-2xl mb-6">Login</h2>
+        <h1 class="text-5xl font-bold mb-6">Login</h1>
         <form class="space-y-4" onsubmit="handleLogin(event)">
             <div>
                 <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
