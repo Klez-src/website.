@@ -53,7 +53,7 @@
             const messageDiv = document.getElementById('message');
 
             try {
-                const response = await fetch('http://localhost:3000/users');
+                const response = await fetch('CYCLIC_URL/users');
                 const users = await response.json();
                 const user = users.find(user => user.username === username && user.password === password);
                 if (user) {
