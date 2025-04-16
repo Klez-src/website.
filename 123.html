@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .fade {
@@ -27,61 +27,37 @@
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     document.getElementById('main-content').classList.remove('hidden');
-                    loadUser Data(); // Load user data after showing main content
                 }, 500);
             }, 1000);
-        };
 
-        function loadUser Data() {
+            // Retrieve users from localStorage
             const users = JSON.parse(localStorage.getItem('users')) || [];
-            const userDataTable = document.getElementById('user-data');
-            userDataTable.innerHTML = ''; // Clear existing data
-
-            users.forEach((user, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="border px-4 py-2">${index + 1}</td>
-                    <td class="border px-4 py-2">${user.username}</td>
-                    <td class="border px-4 py-2">${user.password}</td>
-                    <td class="border px-4 py-2">
-                        <button onclick="resetPassword(${index})" class="bg-yellow-500 text-white px-2 py-1 rounded">Reset</button>
-                    </td>
-                `;
-                userDataTable.appendChild(row);
-            });
-        }
-
-        function resetPassword(index) {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const newPassword = prompt("Enter new password:");
-            if (newPassword) {
-                users[index].password = newPassword; // Update password
-                localStorage.setItem('users', JSON.stringify(users)); // Save updated users
-                alert("Password reset successfully!");
-                loadUser Data(); // Refresh the user data table
+            const userList = document.getElementById('user-list');
+            
+            if (users.length > 0) {
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = user.username;
+                    li.className = 'py-2';
+                    userList.appendChild(li);
+                });
+            } else {
+                userList.innerHTML = '<li class="py-2">No users found.</li>';
             }
-        }
+        };
     </script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex items-center justify-center h-screen">
     <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
         <div class="spinner"></div>
     </div>
-    <div id="main-content" class="container mx-auto p-6 hidden">
-        <h1 class="text-3xl font-bold mb-6 text-center">Admin Panel</h1>
-        <table class="min-w-full bg-white border border-gray-300">
-            <thead>
-                <tr>
-                    <th class="border px-4 py-2">UID</th>
-                    <th class="border px-4 py-2">Username</th>
-                    <th class="border px-4 py-2">Password</th>
-                    <th class="border px-4 py-2">Reset Password</th>
-                </tr>
-            </thead>
-            <tbody id="user-data">
-                <!-- User data will be populated here -->
-            </tbody>
-        </table>
+    <div id="main-content" class="text-center hidden">
+        <h1 class="text-5xl font-bold mb-6">Dashboard</h1>
+        <h2 class="text-2xl mb-4">Registered Users</h2>
+        <ul id="user-list" class="list-disc list-inside"></ul>
+        <div class="mt-4">
+            <a href="index.html" class="text-blue-500 underline">Back to Login</a>
+        </div>
     </div>
 </body>
 </html>
