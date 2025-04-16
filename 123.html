@@ -6,15 +6,8 @@
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .loading-screen {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            opacity: 1;
-            animation: fadeOut 1.5s forwards;
+        .fade {
+            transition: opacity 0.5s ease;
         }
         .spinner {
             border: 4px solid #000;
@@ -24,27 +17,23 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
-        .main-content {
-            opacity: 0;
-            animation: fadeIn 0.5s forwards;
-            animation-delay: 1s;
-        }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            66% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
-        }
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        window.onload = function() {
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                }, 500);
+            }, 1000);
+
             try {
                 const users = JSON.parse(localStorage.getItem('users')) || [];
                 const userList = document.getElementById('user-list');
@@ -62,14 +51,14 @@
                 console.error('Error loading users:', error);
                 document.getElementById('user-list').innerHTML = '<li class="py-2">Error loading users.</li>';
             }
-        });
+        };
     </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="loading-screen">
+    <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
         <div class="spinner"></div>
     </div>
-    <div class="main-content text-center">
+    <div id="main-content" class="text-center hidden">
         <h1 class="text-5xl font-bold mb-6">Dashboard</h1>
         <h2 class="text-2xl mb-4">Registered Users</h2>
         <ul id="user-list" class="list-disc list-inside"></ul>
