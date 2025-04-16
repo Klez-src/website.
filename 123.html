@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: Arial, sans-serif; }
         .fade {
             transition: opacity 0.5s ease;
         }
@@ -19,6 +18,50 @@
             animation: spin 1s linear infinite;
         }
     </style>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                    loadUser Data(); // Load user data after showing main content
+                }, 500);
+            }, 1000);
+        };
+
+        function loadUser Data() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userDataTable = document.getElementById('user-data');
+            userDataTable.innerHTML = ''; // Clear existing data
+
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="border px-4 py-2">${index + 1}</td>
+                    <td class="border px-4 py-2">${user.username}</td>
+                    <td class="border px-4 py-2">${user.password}</td>
+                    <td class="border px-4 py-2">
+                        <button onclick="resetPassword(${index})" class="bg-yellow-500 text-white px-2 py-1 rounded">Reset</button>
+                    </td>
+                `;
+                userDataTable.appendChild(row);
+            });
+        }
+
+        function resetPassword(index) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const newPassword = prompt("Enter new password:");
+            if (newPassword) {
+                users[index].password = newPassword; // Update password
+                localStorage.setItem('users', JSON.stringify(users)); // Save updated users
+                alert("Password reset successfully!");
+                loadUser Data(); // Refresh the user data table
+            }
+        }
+    </script>
 </head>
 <body class="bg-gray-100">
     <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
@@ -40,72 +83,5 @@
             </tbody>
         </table>
     </div>
-
-    <script>
-        window.onload = function() {
-            setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade');
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
-                    loadingScreen.classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                    loadUser Data(); // Load user data after showing main content
-                }, 500);
-            }, 1000);
-        };
-
-        function loadUser Data() {
-            fetch('123.html')
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
-                        const cells = row.querySelectorAll('td');
-                        return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
-                    }).filter(user => user.username);
-
-                    const userDataTable = document.getElementById('user-data');
-                    users.forEach(user => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td class="border px-4 py-2">${user.uid}</td>
-                            <td class="border px-4 py-2">${user.username}</td>
-                            <td class="border px-4 py-2">${user.password}</td>
-                            <td class="border px-4 py-2"><button onclick="resetPassword(${user.uid})" class="bg-yellow-500 text-white px-2 py-1 rounded">Reset</button></td>
-                        `;
-                        userDataTable.appendChild(row);
-                    });
-                });
-        }
-
-        function resetPassword(uid) {
-            fetch('123.html')
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
- const cells = row.querySelectorAll('td');
-                        return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
-                    }).filter(user => user.username);
-
-                    const userIndex = users.findIndex(user => user.uid === uid.toString());
-                    if (userIndex !== -1) {
-                        const newPassword = prompt("Enter new password:");
-                        if (newPassword) {
-                            users[userIndex].password = newPassword;
-                            const newContent = users.map(user => `<tr><td>${user.uid}</td><td>${user.username}</td><td>${user.password}</td></tr>`).join('');
-                            const updatedHTML = `<table><thead><tr><th>UID</th><th>Username</th><th>Password</th><th>Reset Password</th></tr></thead><tbody>${newContent}</tbody></table>`;
-                            const blob = new Blob([updatedHTML], { type: 'text/html' });
-                            const url = URL.createObjectURL(blob);
-                            alert("Password reset successfully!");
-                            window.location.href = url;
-                        }
-                    }
-                });
-        }
-    </script>
 </body>
 </html>
