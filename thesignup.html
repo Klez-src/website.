@@ -81,8 +81,8 @@
 
                     // Check if username already exists
                     const userExists = existingUsers.some(user => user.username === username);
-                    if (userExists) {
- document.getElementById('error-message').textContent = "Username already taken";
+ if (userExists) {
+                        document.getElementById('error-message').textContent = "Username already taken";
                         return;
                     }
 
