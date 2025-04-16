@@ -54,12 +54,12 @@
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     document.getElementById('main-content').classList.remove('hidden');
-                    loadUserData(); // Load user data after showing main content
+                    loadUser Data(); // Load user data after showing main content
                 }, 500);
             }, 1000);
         };
 
-        function loadUserData() {
+        function loadUser Data() {
             fetch('123.html')
                 .then(response => response.text())
                 .then(data => {
@@ -90,8 +90,7 @@
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    const users ```html
-                    = Array.from(doc.querySelectorAll('tr')).map(row => {
+                    const users = Array.from(doc.querySelector All('tr')).map(row => {
                         const cells = row.querySelectorAll('td');
                         return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
                     }).filter(user => user.username);
