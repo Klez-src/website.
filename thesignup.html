@@ -36,11 +36,21 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Store user data in localStorage
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
+            // Retrieve existing users or initialize empty array
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Check if username already exists
+            if (users.some(user => user.username === username)) {
+                alert('Username already exists. Please choose another.');
+                return;
+            }
+
+            // Add new user to array
+            users.push({ username, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            
             alert('Sign up successful! You can now log in.');
-            window.location.href = 'index.html'; // Redirect to login page
+            window.location.href = 'index.html';
         }
     </script>
 </head>
