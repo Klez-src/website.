@@ -23,28 +23,19 @@
         }
     </style>
     <script>
-        const users = []; // Passwords will be injected here by the server
+        const users = []; // Add manually, e.g., { username: "test", password: "123" }
 
         window.onload = function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
-            if (!loadingScreen || !mainContent) {
-                console.error('Loading screen or main content element not found.');
-                return;
-            }
+            if (!loadingScreen || !mainContent) return;
             setTimeout(function() {
-                try {
-                    loadingScreen.classList.remove('fade');
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(function() {
-                        loadingScreen.classList.add('hidden');
-                        mainContent.classList.remove('hidden');
-                    }, 500);
-                } catch (error) {
-                    console.error('Error during loading transition:', error);
+                loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainContent.classList.remove('hidden');
-                }
+                }, 500);
             }, 1000);
         };
     </script>
@@ -57,7 +48,7 @@
         <h1 class="text-5xl font-bold mb-6">Dashboard</h1>
         <h2 class="text-2xl mb-4">Registered Users</h2>
         <ul id="user-list" class="list-disc list-inside">
-            <!-- Usernames will be injected here by the server -->
+            <!-- Add manually, e.g., <li class="py-2">test</li> -->
         </ul>
         <div class="mt-4">
             <a href="index.html" class="text-blue-500 underline">Back to Login</a>
