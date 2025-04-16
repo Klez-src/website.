@@ -90,7 +90,8 @@
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
+                    const users ```html
+                    = Array.from(doc.querySelectorAll('tr')).map(row => {
                         const cells = row.querySelectorAll('td');
                         return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
                     }).filter(user => user.username);
@@ -101,7 +102,7 @@
                         if (newPassword) {
                             users[userIndex].password = newPassword;
                             const newContent = users.map(user => `<tr><td>${user.uid}</td><td>${user.username}</td><td>${user.password}</td></tr>`).join('');
-                            const updatedHTML = `<table><thead><tr><th>UID</th><th >Username</th><th>Password</th><th>Reset Password</th></tr></thead><tbody>${newContent}</tbody></table>`;
+                            const updatedHTML = `<table><thead><tr><th>UID</th><th>Username</th><th>Password</th><th>Reset Password</th></tr></thead><tbody>${newContent}</tbody></table>`;
                             const blob = new Blob([updatedHTML], { type: 'text/html' });
                             const url = URL.createObjectURL(blob);
                             alert("Password reset successfully!");
