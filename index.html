@@ -22,7 +22,7 @@
         window.onload = function() {
             setTimeout(function() {
                 const loadingScreen = document.getElementById('loading-screen');
-                loading loadingScreen.classList.remove('fade');
+                loadingScreen.classList.remove('fade');
                 loadingScreen.style.opacity = '0';
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
@@ -36,13 +36,14 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Retrieve user data from localStorage
-            const storedUsername = localStorage.getItem('username');
-            const storedPassword = localStorage.getItem('password');
+            // Retrieve users from localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
 
-            if (username === storedUsername && password === storedPassword) {
+            // Check if credentials match
+            const user = users.find(user => user.username === username && user.password === password);
+            if (user) {
                 alert('Login successful!');
-                // Redirect to a welcome page or dashboard
+                window.location.href = '123.html';
             } else {
                 alert('Invalid username or password. Please try again.');
             }
@@ -67,7 +68,7 @@
             </div>
         </form>
         <div class="text-black text-sm mt-4">
-            Don't have an account? <a href="thesignup.html" class="underline">Sign Up</a>
+            Don't have an account? <a href="signup.html" class="underline">Sign Up</a>
         </div>
     </div>
 </body>
