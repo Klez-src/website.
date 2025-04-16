@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Page</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .fade {
             transition: opacity 0.5s ease;
@@ -20,10 +20,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -44,9 +40,9 @@
             <div>
                 <input type="password" id="confirm-password" placeholder="Confirm Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
             </div>
-            <div id="error-message" class="error"></div>
+            <div id="error-message" class="text-red-500"></div>
             <div>
-                <button type="submit" class="w-64 px-4 py-2 bg-white border rounded-md text-black font-semibold hover:bg-gray-200">Sign Up</button>
+                <button type="submit" class="w-64 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Sign Up</button>
             </div>
         </form>
         <div class="text-black text-sm mt-4">
@@ -86,7 +82,7 @@
                     // Check if username already exists
                     const userExists = existingUsers.some(user => user.username === username);
                     if (userExists) {
-                        document .getElementById('error-message').textContent = "Username already taken";
+ document.getElementById('error-message').textContent = "Username already taken";
                         return;
                     }
 
