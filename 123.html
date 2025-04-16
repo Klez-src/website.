@@ -31,4 +31,55 @@
         function loadUser Data() {
             fetch('123.html')
                 .then(response => response.text())
-                .then(data =>
+                .then(data => const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
+                        const cells = row.querySelectorAll('td');
+                        return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
+                    }).filter(user => user.username); // Filter out empty rows
+
+                    const userDataTable = document.getElementById('user-data');
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="border px-4 py-2">${user.uid}</td>
+                            <td class="border px-4 py-2">${user.username}</td>
+                            <td class="border px-4 py-2">${user.password}</td>
+                            <td class="border px-4 py-2"><button onclick="resetPassword(${user.uid})" class="bg-yellow-500 text-white px-2 py-1 rounded">Reset</button></td>
+                        `;
+                        userDataTable.appendChild(row);
+                    });
+                });
+        }
+
+        function resetPassword(uid) {
+            fetch('123.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
+                        const cells = row.querySelectorAll('td');
+                        return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
+                    }).filter(user => user.username);
+
+                    const userIndex = users.findIndex(user => user.uid === uid.toString());
+                    if (userIndex !== -1) {
+                        const newPassword = prompt("Enter new password:");
+                        if (newPassword) {
+                            users[userIndex].password = newPassword; // Update password
+                            const newContent = users.map(user => `<tr><td>${user.uid}</td><td>${user.username}</td><td>${user.password}</td></tr>`).join('');
+                            const updatedHTML = `<table><thead><tr><th>UID</th><th>Username</th><th>Password</th><th>Reset Password</th></tr></thead><tbody>${newContent}</tbody></table>`;
+                            const blob = new Blob([updatedHTML], { type: 'text/html' });
+                            const url = URL.createObjectURL(blob);
+                            alert("Password reset successfully!");
+                            window.location.href = url; // Redirect to updated admin panel
+                        }
+                    }
+                });
+        }
+
+        loadUser Data();
+    </script>
+</body>
+</html>
