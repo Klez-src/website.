@@ -17,17 +17,35 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <script>
         window.onload = function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+
+            if (!loadingScreen || !mainContent) {
+                console.error('Loading screen or main content element not found.');
+                return;
+            }
+
             setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade');
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
+                try {
+                    loadingScreen.classList.remove('fade');
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainContent.classList.remove('hidden');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error during loading transition:', error);
+                    // Fallback: show main content immediately
                     loadingScreen.classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                }, 500);
+                    mainContent.classList.remove('hidden');
+                }
             }, 1000);
         };
 
@@ -36,19 +54,14 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Retrieve existing users or initialize empty array
             let users = JSON.parse(localStorage.getItem('users')) || [];
-            
-            // Check if username already exists
             if (users.some(user => user.username === username)) {
                 alert('Username already exists. Please choose another.');
                 return;
             }
 
-            // Add new user to array
             users.push({ username, password });
             localStorage.setItem('users', JSON.stringify(users));
-            
             alert('Sign up successful! You can now log in.');
             window.location.href = 'index.html';
         }
