@@ -1,84 +1,59 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Sign Up Page</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
     <style>
-        .fade {
-            transition: opacity 0.5s ease;
-        }
-        .spinner {
-            border: 4px solid #000; /* Black border */
-            border-top: 4px solid transparent; /* Transparent top */
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite; /* Spinning animation */
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
+        body { font-family: Arial, sans-serif; }
+        .error { color: red; }
     </style>
-    <script>
-        window.onload = function() {
-            setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade'); // Remove fade class to allow for opacity change
-                loadingScreen.style.opacity = '0'; // Start fade-out
-                setTimeout(function() {
-                    loadingScreen.classList.add('hidden'); // Hide after fade-out
-                    document.getElementById('main-content').classList.remove('hidden'); // Show main content
-                }, 500); // Match this duration with the CSS transition duration
-            }, 1000);
-        };
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Sign Up</button>
+    </form>
+    <div id="error-message" class="error"></div>
 
-        function handleSubmit(event) {
-            event.preventDefault(); // Prevent the default form submission
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Check if the username already exists
-            const existingUsername = localStorage.getItem('username');
-            if (existingUsername === username) {
-                document.getElementById('error-message').textContent = "Username already taken";
-                return;
-            }
+            // Fetch existing users from 123.html
+            fetch('123.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const existingUsers = Array.from(doc.querySelectorAll('tr')).map(row => {
+                        const cells = row.querySelectorAll('td');
+                        return { username: cells[1]?.textContent, password: cells[2]?.textContent };
+                    }).filter(user => user.username); // Filter out empty rows
 
-            // Save the username and password to localStorage
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
+                    // Check if username already exists
+                    const userExists = existingUsers.some(user => user.username === username);
+                    if (userExists) {
+                        document.getElementById('error-message').textContent = "Username already taken";
+                        return;
+                    }
 
-            // Redirect to the login page
-            window.location.href = 'index.html';
-        }
+                    // Create a new user row
+                    const newUser Row = `<tr><td>${Date.now()}</td><td>${username}</td><td>${password}</td></tr>`;
+
+                    // Save the new user to 123.html
+                    const newContent = data.replace('</tbody>', newUser Row + '</tbody>');
+                    const blob = new Blob([newContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+
+                    // Redirect to the admin panel
+                    window.location.href = url;
+                });
+        });
     </script>
-</head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
-        <div class="spinner"></div>
-    </div>
-    <div id="main-content" class="text-center hidden">
-        <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
-        <h2 class="text-2xl mb-6">sign up</h2>
-        <form class="space-y-4" onsubmit="handleSubmit(event)">
-            <div>
-                <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-            </div>
-            <div>
-                <input type="password" id="password" placeholder="Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-            </div>
-            <div>
-                <input type="password" id="confirm-password" placeholder="Confirm Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-            </div>
-            <div id="error-message" class="error"></div>
-            <div>
-                <button type="submit" class="w-64 px-4 py-2 bg-white border rounded-md text-black font-semibold hover:bg-gray-200">sign up</button>
-            </div>
-        </form>
-        <div class="text-black text-sm mt-4">
-            Already have an account? <a href="index.html ⬤
+</body>
+</html>
