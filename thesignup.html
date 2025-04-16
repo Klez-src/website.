@@ -24,14 +24,25 @@
     </style>
     <script>
         window.onload = function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+            if (!loadingScreen || !mainContent) {
+                console.error('Loading screen or main content element not found.');
+                return;
+            }
             setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade');
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
+                try {
+                    loadingScreen.classList.remove('fade');
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainContent.classList.remove('hidden');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error during loading transition:', error);
                     loadingScreen.classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                }, 500);
+                    mainContent.classList.remove('hidden');
+                }
             }, 1000);
         };
 
@@ -41,7 +52,9 @@
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
-            let users = JSON.parse(localStorage.getItem('users')) || [];
+            // Encode data to send to 123.html via query string
+            const usersParam = new URLSearchParams(window.location.search).get('users') || '[]';
+            let users = JSON.parse(decodeURIComponent(usersParam));
             if (users.some(user => user.username === username)) {
                 messageDiv.textContent = 'Username already exists. Please choose another.';
                 messageDiv.className = 'text-red-500 text-sm mt-2';
@@ -49,12 +62,12 @@
             }
 
             users.push({ username, password });
-            localStorage.setItem('users', JSON.stringify(users));
+            const encodedUsers = encodeURIComponent(JSON.stringify(users));
             messageDiv.textContent = 'Sign up successful! Redirecting to login...';
             messageDiv.className = 'text-green-500 text-sm mt-2';
             setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000); // Redirect after 2 seconds to show message
+                window.location.href = `index.html?users=${encodedUsers}`;
+            }, 2000);
         }
     </script>
 </head>
