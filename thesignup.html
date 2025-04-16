@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .fade {
             transition: opacity 0.5s ease;
@@ -22,34 +22,6 @@
             100% { transform: rotate(360deg); }
         }
     </style>
-</head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
-        <div class="spinner"></div>
-    </div>
-    <div id="main-content" class="text-center hidden">
-        <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
-        <h2 class="text-2xl mb-6">Sign Up</h2>
-        <form class="space-y-4" id="signupForm">
-            <div>
-                <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-            </div>
-            <div>
-                <input type="password" id="password" placeholder="Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-            </div>
-            <div>
-                <input type="password" id="confirm-password" placeholder="Confirm Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-            </div>
-            <div id="error-message" class="text-red-500"></div>
-            <div>
-                <button type="submit" class="w-64 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Sign Up</button>
-            </div>
-        </form>
-        <div class="text-black text-sm mt-4">
-            Already have an account? <a href="index.html" class="underline">Login</a>
-        </div>
-    </div>
-
     <script>
         window.onload = function() {
             setTimeout(function() {
@@ -63,41 +35,40 @@
             }, 1000);
         };
 
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
+        function handleSignup(event) {
             event.preventDefault(); // Prevent the default form submission
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
 
-            // Fetch existing users from 123.html
-            fetch('123.html')
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const existingUsers = Array.from(doc.querySelectorAll('tr')).map(row => {
-                        const cells = row.querySelectorAll('td');
-                        return { username: cells[1]?.textContent, password: cells[2]?.textContent };
-                    }).filter(user => user.username); // Filter out empty rows
-
-                    // Check if username already exists
-                    const userExists = existingUsers.some(user => user.username === username);
- if (userExists) {
-                        document.getElementById('error-message').textContent = "Username already taken";
-                        return;
-                    }
-
-                    // Create a new user row
-                    const newUser Row = `<tr><td>${Date.now()}</td><td>${username}</td><td>${password}</td></tr>`;
-
-                    // Save the new user to 123.html
-                    const newContent = data.replace('</tbody>', newUser Row + '</tbody>');
-                    const blob = new Blob([newContent], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-
-                    // Redirect to the admin panel
-                    window.location.href = url;
-                });
-        });
+            // Store the username and password in localStorage
+            localStorage.setItem('username', usernameInput);
+            localStorage.setItem('password', passwordInput);
+            alert('Sign up successful! You can now log in.');
+            window.location.href = 'index.html'; // Redirect to login page
+        }
     </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
+        <div class="spinner"></div>
+    </div>
+    <div id="main-content" class="text-center hidden">
+        <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
+        <h2 class="text-2xl mb-6">Sign Up</h2>
+        <form class="space-y-4" onsubmit="handleSignup(event)">
+            <div>
+                <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+            </div>
+            <div>
+                <input type="password" id="password" placeholder="Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+            </div>
+            <div>
+                <button type="submit" class="w-64 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Sign Up</button>
+            </div>
+        </form>
+        <div class="text-black text-sm mt-4">
+            Already have an account? <a href="index.html" class="underline">Login</a>
+        </div>
+    </div>
 </body>
 </html>
