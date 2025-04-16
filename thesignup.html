@@ -10,39 +10,35 @@
             transition: opacity 0.5s ease;
         }
         .spinner {
-            border: 4px solid #000; /* Black border */
-            border-top: 4px solid transparent; /* Transparent top */
+            border: 4px solid #000;
+            border-top: 4px solid transparent;
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite; /* Spinning animation */
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            animation: spin 1s linear infinite;
         }
     </style>
     <script>
         window.onload = function() {
             setTimeout(function() {
                 const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade'); // Remove fade class to allow for opacity change
-                loadingScreen.style.opacity = '0'; // Start fade-out
+                loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
                 setTimeout(function() {
-                    loadingScreen.classList.add('hidden'); // Hide after fade-out
-                    document.getElementById('main-content').classList.remove('hidden'); // Show main content
-                }, 500); // Match this duration with the CSS transition duration
+                    loadingScreen.classList.add('hidden');
+                    document.getElementById('main-content').classList.remove('hidden');
+                }, 500);
             }, 1000);
         };
 
         function handleSignup(event) {
-            event.preventDefault(); // Prevent the default form submission
-            const usernameInput = document.getElementById('username').value;
-            const passwordInput = document.getElementById('password').value;
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-            // Store the username and password in localStorage
-            localStorage.setItem('username', usernameInput);
-            localStorage.setItem('password', passwordInput);
+            // Store user data in localStorage
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
             alert('Sign up successful! You can now log in.');
             window.location.href = 'index.html'; // Redirect to login page
         }
@@ -53,8 +49,7 @@
         <div class="spinner"></div>
     </div>
     <div id="main-content" class="text-center hidden">
-        <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
-        <h2 class="text-2xl mb-6">Sign Up</h2>
+        <h1 class="text-5xl font-bold mb-6">Sign Up</h1>
         <form class="space-y-4" onsubmit="handleSignup(event)">
             <div>
                 <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
