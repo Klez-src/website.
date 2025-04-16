@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title>User Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        function loadUser Data() {
+            const username = localStorage.getItem('username');
+            const password = localStorage.getItem('password');
+
+            const tableBody = document.getElementById('user-data');
+            if (username && password) {
+                const row = document.createElement('tr');
+                const usernameCell = document.createElement('td');
+                const passwordCell = document.createElement('td');
+
+                usernameCell.textContent = username;
+                passwordCell.textContent = password;
+
+                row.appendChild(usernameCell);
+                row.appendChild(passwordCell);
+                tableBody.appendChild(row);
+            } else {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.textContent = 'No user data available.';
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+            }
+        }
+    </script>
+</head>
+<body onload="loadUser Data()" class="bg-gray-100">
+    <h1 class="text-3xl text-center mt-6">User  Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+        <tbody id="user-data">
+            <!-- User data will be populated here -->
+        </tbody>
+    </table>
+</body>
+</html>
