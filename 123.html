@@ -17,32 +17,53 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <script>
         window.onload = function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+
+            if (!loadingScreen || !mainContent) {
+                console.error('Loading screen or main content element not found.');
+                return;
+            }
+
             setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade');
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
+                try {
+                    loadingScreen.classList.remove('fade');
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainContent.classList.remove('hidden');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error during loading transition:', error);
+                    // Fallback: show main content immediately
                     loadingScreen.classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                }, 500);
+                    mainContent.classList.remove('hidden');
+                }
             }, 1000);
 
-            // Retrieve users from localStorage
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const userList = document.getElementById('user-list');
-            
-            if (users.length > 0) {
-                users.forEach(user => {
-                    const li = document.createElement('li');
-                    li.textContent = user.username;
-                    li.className = 'py-2';
-                    userList.appendChild(li);
-                });
-            } else {
-                userList.innerHTML = '<li class="py-2">No users found.</li>';
+            try {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const userList = document.getElementById('user-list');
+                if (users.length > 0) {
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.textContent = user.username;
+                        li.className = 'py-2';
+                        userList.appendChild(li);
+                    });
+                } else {
+                    userList.innerHTML = '<li class="py-2">No users found.</li>';
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('user-list').innerHTML = '<li class="py-2">Error loading users.</li>';
             }
         };
     </script>
