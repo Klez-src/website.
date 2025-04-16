@@ -46,28 +46,33 @@
             }, 1000);
         };
 
-        function handleSignup(event) {
+        async function handleSignup(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
-            // Encode data to send to 123.html via query string
-            const usersParam = new URLSearchParams(window.location.search).get('users') || '[]';
-            let users = JSON.parse(decodeURIComponent(usersParam));
-            if (users.some(user => user.username === username)) {
-                messageDiv.textContent = 'Username already exists. Please choose another.';
+            try {
+                const response = await fetch('http://localhost:3000/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    messageDiv.textContent = 'Sign up successful! Redirecting to login...';
+                    messageDiv.className = 'text-green-500 text-sm mt-2';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    messageDiv.textContent = result.message || 'Signup failed. Please try again.';
+                    messageDiv.className = 'text-red-500 text-sm mt-2';
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Error connecting to server. Please try again later.';
                 messageDiv.className = 'text-red-500 text-sm mt-2';
-                return;
             }
-
-            users.push({ username, password });
-            const encodedUsers = encodeURIComponent(JSON.stringify(users));
-            messageDiv.textContent = 'Sign up successful! Redirecting to login...';
-            messageDiv.className = 'text-green-500 text-sm mt-2';
-            setTimeout(() => {
-                window.location.href = `index.html?users=${encodedUsers}`;
-            }, 2000);
         }
     </script>
 </head>
