@@ -33,7 +33,7 @@
     </div>
     <div id="main-content" class="text-center hidden">
         <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
-        <h2 class="text-2xl mb-6">sign up</h2>
+        <h2 class="text-2xl mb-6">Sign Up</h2>
         <form class="space-y-4" id="signupForm">
             <div>
                 <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
@@ -46,11 +46,11 @@
             </div>
             <div id="error-message" class="error"></div>
             <div>
-                <button type="submit" class="w-64 px-4 py-2 bg-white border rounded-md text-black font-semibold hover:bg-gray-200">sign up</button>
+                <button type="submit" class="w-64 px-4 py-2 bg-white border rounded-md text-black font-semibold hover:bg-gray-200">Sign Up</button>
             </div>
         </form>
         <div class="text-black text-sm mt-4">
-            Already have an account? <a href="index.html" class="underline">login</a>
+            Already have an account? <a href="index.html" class="underline">Login</a>
         </div>
     </div>
 
@@ -85,8 +85,8 @@
 
                     // Check if username already exists
                     const userExists = existingUsers.some(user => user.username === username);
-                    if ( userExists) {
-                        document.getElementById('error-message').textContent = "Username already taken";
+                    if (userExists) {
+                        document .getElementById('error-message').textContent = "Username already taken";
                         return;
                     }
 
