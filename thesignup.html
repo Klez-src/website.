@@ -6,7 +6,9 @@
     <title>Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .fade { transition: opacity 0.5s ease; }
+        .fade {
+            transition: opacity 0.5s ease;
+        }
         .spinner {
             border: 4px solid #000;
             border-top: 4px solid transparent;
@@ -24,7 +26,10 @@
         window.onload = function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
-            if (!loadingScreen || !mainContent) return;
+            if (!loadingScreen || !mainContent) {
+                console.error('Loading screen or main content element not found.');
+                return;
+            }
             setTimeout(function() {
                 try {
                     loadingScreen.classList.remove('fade');
@@ -34,21 +39,40 @@
                         mainContent.classList.remove('hidden');
                     }, 500);
                 } catch (error) {
+                    console.error('Error during loading transition:', error);
                     loadingScreen.classList.add('hidden');
                     mainContent.classList.remove('hidden');
                 }
             }, 1000);
         };
 
-        function handleSignup(event) {
+        async function handleSignup(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
-            messageDiv.textContent = `Please manually add "${username}" to 123.html and update the users array.`;
-            messageDiv.className = 'text-yellow-500 text-sm mt-2';
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 3000);
+
+            try {
+                const response = await fetch('CYCLIC_URL/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    messageDiv.textContent = 'Sign up successful! Redirecting to login...';
+                    messageDiv.className = 'text-green-500 text-sm mt-2';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    messageDiv.textContent = result.message || 'Signup failed. Please try again.';
+                    messageDiv.className = 'text-red-500 text-sm mt-2';
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Error connecting to server. Please try again later.';
+                messageDiv.className = 'text-red-500 text-sm mt-2';
+            }
         }
     </script>
 </head>
