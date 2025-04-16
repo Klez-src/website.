@@ -17,17 +17,35 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <script>
         window.onload = function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+
+            if (!loadingScreen || !mainContent) {
+                console.error('Loading screen or main content element not found.');
+                return;
+            }
+
             setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade');
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
+                try {
+                    loadingScreen.classList.remove('fade');
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainContent.classList.remove('hidden');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error during loading transition:', error);
+                    // Fallback: show main content immediately
                     loadingScreen.classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                }, 500);
+                    mainContent.classList.remove('hidden');
+                }
             }, 1000);
         };
 
@@ -36,10 +54,7 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Retrieve users from localStorage
             const users = JSON.parse(localStorage.getItem('users')) || [];
-
-            // Check if credentials match
             const user = users.find(user => user.username === username && user.password === password);
             if (user) {
                 alert('Login successful!');
