@@ -1,62 +1,86 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>User Data</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
     <style>
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+        body { font-family: Arial, sans-serif; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
     </style>
-    <script>
-        function loadUser Data() {
-            const username = localStorage.getItem('username');
-            const password = localStorage.getItem('password');
-
-            const tableBody = document.getElementById('user-data');
-            if (username && password) {
-                const row = document.createElement('tr');
-                const usernameCell = document.createElement('td');
-                const passwordCell = document.createElement('td');
-
-                usernameCell.textContent = username;
-                passwordCell.textContent = password;
-
-                row.appendChild(usernameCell);
-                row.appendChild(passwordCell);
-                tableBody.appendChild(row);
-            } else {
-                const row = document.createElement('tr');
-                const cell = document.createElement('td');
-                cell.colSpan = 2;
-                cell.textContent = 'No user data available.';
-                row.appendChild(cell);
-                tableBody.appendChild(row);
-            }
-        }
-    </script>
 </head>
-<body onload="loadUser Data()" class="bg-gray-100">
-    <h1 class="text-3xl text-center mt-6">User  Data</h1>
+<body>
+    <h1>Admin Panel</h1>
     <table>
         <thead>
             <tr>
+                <th>UID</th>
                 <th>Username</th>
                 <th>Password</th>
+                <th>Reset Password</th>
             </tr>
         </thead>
         <tbody id="user-data">
             <!-- User data will be populated here -->
         </tbody>
     </table>
+
+    <script>
+        function loadUserData() {
+            fetch('123.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
+                        const cells = row.querySelector All('td');
+                        return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
+                    }).filter(user => user.username); // Filter out empty rows
+
+                    const userDataTable = document.getElementById('user-data');
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.uid}</td>
+                            <td>${user.username}</td>
+                            <td>${user.password}</td>
+                            <td><button onclick="resetPassword(${user.uid})">Reset</button></td>
+                        `;
+                        userDataTable.appendChild(row);
+                    });
+                });
+        }
+
+        function resetPassword(uid) {
+            fetch('123.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const users = Array.from(doc.querySelectorAll('tr')).map(row => {
+                        const cells = row.querySelectorAll('td');
+                        return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
+                    }).filter(user => user.username);
+
+                    const userIndex = users.findIndex(user => user.uid === uid.toString());
+                    if (userIndex !== -1) {
+                        const newPassword = prompt("Enter new password:");
+                        if (newPassword) {
+                            users[userIndex].password = newPassword; // Update password
+                            const newContent = users.map(user => `<tr><td>${user.uid}</td><td>${user.username}</td><td>${user.password}</td></tr>`).join('');
+                            const updatedHTML = `<table><thead><tr><th>UID</th><th>Username</th><th>Password</th><th>Reset Password</th></tr></thead><tbody>${newContent}</tbody></table>`;
+                            const blob = new Blob([updatedHTML], { type: 'text/html' });
+                            const url = URL.createObjectURL(blob);
+                            alert("Password reset successfully!");
+                            window.location.href = url; // Redirect to updated admin panel
+                        }
+                    }
+                });
+        }
+
+        loadUser Data();
+    </script>
 </body>
 </html>
