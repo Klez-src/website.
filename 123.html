@@ -87,7 +87,7 @@
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
                     const users = Array.from(doc.querySelectorAll('tr')).map(row => {
-                        const cells = row.querySelector All('td');
+ const cells = row.querySelectorAll('td');
                         return { uid: cells[0]?.textContent, username: cells[1]?.textContent, password: cells[2]?.textContent };
                     }).filter(user => user.username);
 
