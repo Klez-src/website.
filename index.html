@@ -26,48 +26,37 @@
         window.onload = function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
-            if (!loadingScreen || !mainContent) {
-                console.error('Loading screen or main content element not found.');
-                return;
-            }
+            if (!loadingScreen || !mainContent) return;
             setTimeout(function() {
-                try {
-                    loadingScreen.classList.remove('fade');
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(function() {
-                        loadingScreen.classList.add('hidden');
-                        mainContent.classList.remove('hidden');
-                    }, 500);
-                } catch (error) {
-                    console.error('Error during loading transition:', error);
+                loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainContent.classList.remove('hidden');
-                }
+                }, 500);
             }, 1000);
         };
 
-        async function handleLogin(event) {
+        function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
-            try {
-                const response = await fetch('CYCLIC_URL/users');
-                const users = await response.json();
-                const user = users.find(user => user.username === username && user.password === password);
-                if (user) {
-                    messageDiv.textContent = 'Login successful! Redirecting...';
-                    messageDiv.className = 'text-green-500 text-sm mt-2';
-                    setTimeout(() => {
-                        window.location.href = '123.html';
-                    }, 2000);
-                } else {
-                    messageDiv.textContent = 'Invalid username or password. Please try again.';
-                    messageDiv.className = 'text-red-500 text-sm mt-2';
-                }
-            } catch (error) {
-                messageDiv.textContent = 'Error connecting to server. Please try again later.';
+            // Update this array manually to match 123.html
+            const users = [
+                // Example: { username: "test", password: "123" }
+            ];
+
+            const user = users.find(user => user.username === username && user.password === password);
+            if (user) {
+                messageDiv.textContent = 'Login successful! Redirecting...';
+                messageDiv.className = 'text-green-500 text-sm mt-2';
+                setTimeout(() => {
+                    window.location.href = '123.html';
+                }, 2000);
+            } else {
+                messageDiv.textContent = 'Invalid username or password. Please try again.';
                 messageDiv.className = 'text-red-500 text-sm mt-2';
             }
         }
