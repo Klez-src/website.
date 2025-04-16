@@ -24,18 +24,30 @@
     </style>
     <script>
         window.onload = function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+            if (!loadingScreen || !mainContent) {
+                console.error('Loading screen or main content element not found.');
+                return;
+            }
             setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.remove('fade');
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
+                try {
+                    loadingScreen.classList.remove('fade');
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainContent.classList.remove('hidden');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error during loading transition:', error);
                     loadingScreen.classList.add('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                }, 500);
+                    mainContent.classList.remove('hidden');
+                }
             }, 1000);
 
             try {
-                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const usersParam = new URLSearchParams(window.location.search).get('users') || '[]';
+                const users = JSON.parse(decodeURIComponent(usersParam));
                 const userList = document.getElementById('user-list');
                 if (users.length > 0) {
                     users.forEach(user => {
