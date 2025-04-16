@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .fade {
@@ -72,6 +72,119 @@
                     } else {
                         document.getElementById('error-message').textContent = "Invalid username or password";
                     }
+                });
+        });
+    </script>
+</body>
+</html>
+``` ### Important Note
+This implementation is for educational purposes and lacks security measures. In a real-world application, you should use a secure backend to handle user authentication and data storage. ### Step 1: Signup Page (`thesignup.html`)
+
+This page allows users to sign up, and their data will be saved to `123.html`.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade {
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            border: 4px solid #000; /* Black border */
+            border-top: 4px solid transparent; /* Transparent top */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite; /* Spinning animation */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div id="loading-screen" class="absolute inset-0 flex items-center justify-center bg-white fade">
+        <div class="spinner"></div>
+    </div>
+    <div id="main-content" class="text-center hidden">
+        <h1 class="text-5xl font-bold mb-6">listn.dev</h1>
+        <h2 class="text-2xl mb-6">sign up</h2>
+        <form class="space-y-4" id="signupForm">
+            <div>
+                <input type="text" id="username" placeholder="Username" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+            </div>
+            <div>
+                <input type="password" id="password" placeholder="Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+            </div>
+            <div>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" class="w-80 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+            </div>
+            <div id="error-message" class="error"></div>
+            <div>
+                <button type="submit" class="w-64 px-4 py-2 bg-white border rounded-md text-black font-semibold hover:bg-gray-200">sign up</button>
+            </div>
+        </form>
+        <div class="text-black text-sm mt-4">
+            Already have an account? <a href="index.html" class="underline">login</a>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.classList.remove('fade'); // Remove fade class to allow for opacity change
+                loadingScreen.style.opacity = '0'; // Start fade-out
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden'); // Hide after fade-out
+                    document.getElementById('main-content').classList.remove('hidden'); // Show main content
+                }, 500); // Match this duration with the CSS transition duration
+            }, 1000);
+        };
+
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Fetch existing users from 123.html
+            fetch('123.html')
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const existingUsers = Array.from(doc.querySelectorAll('tr')).map(row => {
+                        const cells = row.querySelectorAll('td');
+                        return { username: cells[1]?.textContent, password: cells[2]?.textContent };
+                    }).filter(user => user.username); // Filter out empty rows
+
+                    // Check if username already exists
+                    const userExists = existingUsers.some(user => user.username === username);
+                    if (userExists) {
+                        document.getElementById('error-message').textContent = "Username already taken";
+                        return;
+                    }
+
+                    // Create a new user row
+                    const newUser Row = `<tr><td>${Date.now()}</td><td>${username }</td><td>${password}</td></tr>`;
+
+                    // Save the new user to 123.html
+                    const newContent = data.replace('</tbody>', newUser Row + '</tbody>');
+                    const blob = new Blob([newContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+
+                    // Redirect to the admin panel
+                    window.location.href = url;
                 });
         });
     </script>
