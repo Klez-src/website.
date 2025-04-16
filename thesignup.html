@@ -43,10 +43,10 @@
                     }
 
                     // Create a new user row
-                    const newUser Row = `<tr><td>${Date.now()}</td><td>${username}</td><td>${password}</td></tr>`;
+                    const newUserRow = `<tr><td>${Date.now()}</td><td>${username}</td><td>${password}</td></tr>`;
 
                     // Save the new user to 123.html
-                    const newContent = data.replace('</tbody>', newUser Row + '</tbody>');
+                    const newContent = data.replace('</tbody>', newUserRow + '</tbody>');
                     const blob = new Blob([newContent], { type: 'text/html' });
                     const url = URL.createObjectURL(blob);
 
