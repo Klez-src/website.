@@ -26,53 +26,27 @@
         window.onload = function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
-            if (!loadingScreen || !mainContent) {
-                console.error('Loading screen or main content element not found.');
-                return;
-            }
+            if (!loadingScreen || !mainContent) return;
             setTimeout(function() {
-                try {
-                    loadingScreen.classList.remove('fade');
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(function() {
-                        loadingScreen.classList.add('hidden');
-                        mainContent.classList.remove('hidden');
-                    }, 500);
-                } catch (error) {
-                    console.error('Error during loading transition:', error);
+                loadingScreen.classList.remove('fade');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainContent.classList.remove('hidden');
-                }
+                }, 500);
             }, 1000);
         };
 
-        async function handleSignup(event) {
+        function handleSignup(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
-
-            try {
-                const response = await fetch('CYCLIC_URL/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const result = await response.json();
-                if (response.ok) {
-                    messageDiv.textContent = 'Sign up successful! Redirecting to login...';
-                    messageDiv.className = 'text-green-500 text-sm mt-2';
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                } else {
-                    messageDiv.textContent = result.message || 'Signup failed. Please try again.';
-                    messageDiv.className = 'text-red-500 text-sm mt-2';
-                }
-            } catch (error) {
-                messageDiv.textContent = 'Error connecting to server. Please try again later.';
-                messageDiv.className = 'text-red-500 text-sm mt-2';
-            }
+            messageDiv.textContent = `Signed up as "${username}". Please ask admin to add to 123.html.`;
+            messageDiv.className = 'text-green-500 text-sm mt-2';
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
         }
     </script>
 </head>
