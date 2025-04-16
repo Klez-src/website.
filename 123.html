@@ -23,6 +23,8 @@
         }
     </style>
     <script>
+        const users = []; // Passwords will be injected here by the server
+
         window.onload = function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainContent = document.getElementById('main-content');
@@ -44,25 +46,6 @@
                     mainContent.classList.remove('hidden');
                 }
             }, 1000);
-
-            try {
-                const usersParam = new URLSearchParams(window.location.search).get('users') || '[]';
-                const users = JSON.parse(decodeURIComponent(usersParam));
-                const userList = document.getElementById('user-list');
-                if (users.length > 0) {
-                    users.forEach(user => {
-                        const li = document.createElement('li');
-                        li.textContent = user.username;
-                        li.className = 'py-2';
-                        userList.appendChild(li);
-                    });
-                } else {
-                    userList.innerHTML = '<li class="py-2">No users found.</li>';
-                }
-            } catch (error) {
-                console.error('Error loading users:', error);
-                document.getElementById('user-list').innerHTML = '<li class="py-2">Error loading users.</li>';
-            }
         };
     </script>
 </head>
@@ -73,7 +56,9 @@
     <div id="main-content" class="text-center hidden">
         <h1 class="text-5xl font-bold mb-6">Dashboard</h1>
         <h2 class="text-2xl mb-4">Registered Users</h2>
-        <ul id="user-list" class="list-disc list-inside"></ul>
+        <ul id="user-list" class="list-disc list-inside">
+            <!-- Usernames will be injected here by the server -->
+        </ul>
         <div class="mt-4">
             <a href="index.html" class="text-blue-500 underline">Back to Login</a>
         </div>
